@@ -1,0 +1,132 @@
+-- 🔥 Fire Hub Brookhaven - Tela de Carregamento Premium + Execução do Painel Fire
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local playerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+-- =========================
+-- Tela de Carregamento
+-- =========================
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "FireHubLoading"
+screenGui.IgnoreGuiInset = true
+screenGui.Parent = playerGui
+
+-- Fundo escuro
+local background = Instance.new("Frame")
+background.Size = UDim2.new(1,0,1,0)
+background.BackgroundColor3 = Color3.fromRGB(15,15,15)
+background.BorderSizePixel = 0
+background.Parent = screenGui
+
+-- Gradiente no fundo
+local bgGradient = Instance.new("UIGradient")
+bgGradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(30,30,30)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(15,15,15))
+}
+bgGradient.Rotation = 90
+bgGradient.Parent = background
+
+-- Título Fire Hub
+local title = Instance.new("TextLabel")
+title.Size = UDim2.new(1,0,0,120)
+title.Position = UDim2.new(0,0,0.2,0)
+title.BackgroundTransparency = 1
+title.Text = "🔥 FIRE HUB 🔥"
+title.Font = Enum.Font.GothamBlack
+title.TextSize = 65
+title.TextColor3 = Color3.fromRGB(255,85,0)
+title.TextStrokeTransparency = 0.2
+title.TextStrokeColor3 = Color3.fromRGB(255,180,0)
+title.Parent = background
+
+-- Barra de carregamento
+local barBackground = Instance.new("Frame")
+barBackground.Size = UDim2.new(0.6,0,0,35)
+barBackground.Position = UDim2.new(0.2,0,0.55,0)
+barBackground.BackgroundColor3 = Color3.fromRGB(50,50,50)
+barBackground.BorderSizePixel = 0
+barBackground.Parent = background
+
+local barFill = Instance.new("Frame")
+barFill.Size = UDim2.new(0,0,1,0)
+barFill.BackgroundColor3 = Color3.fromRGB(255,85,0)
+barFill.BorderSizePixel = 0
+barFill.Parent = barBackground
+
+local gradient = Instance.new("UIGradient")
+gradient.Color = ColorSequence.new{
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255,85,0)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255,200,0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(255,85,0))
+}
+gradient.Rotation = 45
+gradient.Parent = barFill
+
+-- Texto dinâmico
+local loadingText = Instance.new("TextLabel")
+loadingText.Size = UDim2.new(1,0,0,40)
+loadingText.Position = UDim2.new(0,0,0.62,0)
+loadingText.BackgroundTransparency = 1
+loadingText.Text = "Carregando..."
+loadingText.Font = Enum.Font.GothamBold
+loadingText.TextSize = 28
+loadingText.TextColor3 = Color3.fromRGB(255,255,255)
+loadingText.Parent = background
+
+-- Função de animação da barra
+local function animateBar(duration)
+    local startTime = tick()
+    while tick() - startTime < duration do
+        local progress = (tick() - startTime) / duration
+        barFill.Size = UDim2.new(progress,0,1,0)
+        wait(0.03)
+    end
+    barFill.Size = UDim2.new(1,0,1,0)
+end
+
+-- Texto dinâmico (vai mudando durante os 5 segundos)
+spawn(function()
+    wait(1.5)
+    loadingText.Text = "Quase lá..."
+    wait(2)
+    loadingText.Text = "Pronto!"
+end)
+
+-- Efeito de brilho no título
+spawn(function()
+    while screenGui.Parent do
+        title.TextStrokeTransparency = 0.1
+        wait(0.4)
+        title.TextStrokeTransparency = 0.3
+        wait(0.4)
+    end
+end)
+
+-- Partículas animadas na barra
+for i = 1, 15 do
+    local particle = Instance.new("Frame")
+    particle.Size = UDim2.new(0,5,1,0)
+    particle.BackgroundColor3 = Color3.fromRGB(255,255,255)
+    particle.BackgroundTransparency = 0.5
+    particle.BorderSizePixel = 0
+    particle.Position = UDim2.new(math.random(),0,0,0)
+    particle.Parent = barFill
+    
+    spawn(function()
+        while particle.Parent do
+            particle.Position = UDim2.new(math.random(),0,0,0)
+            wait(0.5 + math.random())
+        end
+    end)
+end
+
+-- Executa animação (5 segundos)
+animateBar(5)
+
+-- Espera meio segundo, remove a tela e executa o painel Fire
+wait(0.5)
+screenGui:Destroy()
+
+-- 🔽 Aqui roda o Painel Fire 🔽
+loadstring(game:HttpGet("https://raw.githubusercontent.com/olliverwillianvale-lgtm/Fire-Painel-/refs/heads/main/Protected_5427893447429531.lua.txt"))()
